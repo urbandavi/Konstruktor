@@ -15,15 +15,21 @@ function Konyv(cim, szerzo, kiadasiev, oldalszam) {
     }
 }
 
+
+
+
 konyvek.push(
     new Konyv("The Times Desire", "Hyden Cloud", 1871, 200),
     new Konyv("Twinkle Star", "Matthew Rain", 1919, 70),
     new Konyv("Ways of the Devil", "Trixie Wee", 1939, 250)
 )
-console.log(konyvek.length)
 
-konyvek[0].kolcsonoz
+konyvek.forEach(element => {
+    element.kolcsonoz()
+});
 console.log(konyvek[0])
+
+
 
 const target = document.getElementById("target-tbody")
 loadTable()
@@ -40,15 +46,16 @@ function loadTable() {
         fields[1].textContent = konyvek[i].szerzo
         fields[2].textContent = konyvek[i].kiadasiev
         fields[3].textContent = konyvek[i].oldalszam
-        fields[4].textContent = konyvek[i].kolcsonozve ? "Kölcsönözhető" : "Nem kölcsönözhető"
+        fields[4].textContent = konyvek[i].kolcsonozve ? "Kölcsönozve" : "Nincs kölcsönozve"
 
         const button = document.createElement("button")
-        button.textContent = konyvek[i].kolcsonozve ? "Kölcsönözhető" : "Nem kölcsönözhető"
+        button.textContent = konyvek[i].kolcsonozve ? "Visszavitel" : "Kölcsönzés"
         button.addEventListener("click", () => {
             if (konyvek[i].kolcsonozve) {
-                konyvek[i].visszahoz
+                konyvek[i].visszahoz()
             }
             else {
+                konyvek[i].kolcsonoz()
 
             }
             console.log(konyvek[i].kolcsonozve, konyvek[i].kolcsonoz)
