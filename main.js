@@ -24,15 +24,21 @@ konyvek.push(
     new Konyv("Ways of the Devil", "Trixie Wee", 1939, 250)
 )
 
-konyvek.forEach(element => {
-    element.kolcsonoz()
-});
-console.log(konyvek[0])
-
 
 
 const target = document.getElementById("target-tbody")
 loadTable()
+
+
+const ujKonyvInputok = document.getElementsByClassName("uj-konyv-inputok")
+
+
+
+
+
+
+
+
 
 
 function loadTable() {
