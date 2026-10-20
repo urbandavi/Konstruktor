@@ -12,6 +12,9 @@ const evInp = document.getElementById("kiadasi-ev")
 const oldalszamInp = document.getElementById("oldalszam")
 const felvetelBtn = document.getElementById("felvetel")
 const szbdKonyvek = document.getElementById("szbd-konyvek")
+const regiKonyv = document.getElementById("legr-konyv")
+const legvasKönyv = document.getElementById("legv-konyv")
+const oldalAtlag = document.getElementById("oldalszam-atlag")
 
 
 function Konyv(cim, szerzo, kiadasiev, oldalszam) {
@@ -50,7 +53,13 @@ szbdKonyvek.addEventListener(
     }
 )
 
-loadTableCompact()
+document.addEventListener("DOMContentLoaded", ()=>{
+    
+    loadTableCompact()
+    writeStatistics(getStatistics())
+}
+)
+
 
 
 
@@ -58,9 +67,35 @@ function registerBook() {
     konyvek.push(new Konyv(
         cimInp.value, szerzoInp.value, Number(evInp.value), Number(oldalszamInp.value)
     ))
+    writeStatistics(getStatistics())
+
 }
 
 
+function getStatistics() {
+    let jelenKiadasiEv = 0;
+    let jelenOldalszam = 0;
+    let osszOldalszam
+    konyvek.forEach(item => {
+        if (item.oldalszam > jelenOldalszam) {
+            jelenOldalszam = item.oldalszam
+        }
+        if (item.kiadasiev > jelenKiadasiEv) {
+            jelenKiadasiEv = item.kiadasiev
+        }
+        osszOldalszam += item.oldalszam
+    });
+    let oldalatlag = osszOldalszam / konyvek.length
+    return { jelenKiadasiEv, jelenOldalszam, oldalatlag }
+}
+
+
+function writeStatistics(stats) {
+    regiKonyv.innerHTML = `A legrégebbi könyv ${stats.jelenKiadasiEv}\n`
+    legvasKönyv.innerHTML = `A legvastagabb könyve ${stats.jelenOldalszam}\n`
+    oldalAtlag.innerHTML = `Az osszes oldal átlaga ${stats.oldalatlag}\n`
+
+}
 
 
 
@@ -74,7 +109,7 @@ function loadTableCompact() {
             if (!konyvek[index].kolcsonozve) {
                 comapcLoad(konyvek[index], fields)
             }
-            else{
+            else {
                 continue;
             }
         }
