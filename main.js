@@ -1,5 +1,18 @@
 
 const konyvek = []
+let szabadkonyvek = false
+
+
+const target = document.getElementById("target-tbody")
+const template = document.getElementById("table-template")
+const ujKonyvInputok = document.getElementsByClassName("uj-konyv-inputok")
+const cimInp = document.getElementById("cim")
+const szerzoInp = document.getElementById("szerzo")
+const evInp = document.getElementById("kiadasi-ev")
+const oldalszamInp = document.getElementById("oldalszam")
+const felvetelBtn = document.getElementById("felvetel")
+const szbdKonyvek = document.getElementById("szbd-konyvek")
+
 
 function Konyv(cim, szerzo, kiadasiev, oldalszam) {
     this.cim = cim
@@ -15,67 +28,91 @@ function Konyv(cim, szerzo, kiadasiev, oldalszam) {
     }
 }
 
-
-
-
 konyvek.push(
     new Konyv("The Times Desire", "Hyden Cloud", 1871, 200),
     new Konyv("Twinkle Star", "Matthew Rain", 1919, 70),
-    new Konyv("Ways of the Devil", "Trixie Wee", 1939, 250)
+    new Konyv("Ways of the Devil", "Trixie Wee", 1939, 250),
+    new Konyv("Spouces", "Spark", 1941, 400)
 )
 
 
+felvetelBtn.addEventListener(
+    "click", () => {
+        registerBook()
+        loadTableCompact()
+    }
+)
+szbdKonyvek.addEventListener(
+    "click", () => {
+        szabadkonyvek = !szabadkonyvek
+        loadTableCompact()
+        console.log(szabadkonyvek)
+    }
+)
 
-const target = document.getElementById("target-tbody")
-loadTable()
-
-
-const ujKonyvInputok = document.getElementsByClassName("uj-konyv-inputok")
+loadTableCompact()
 
 
 
+function registerBook() {
+    konyvek.push(new Konyv(
+        cimInp.value, szerzoInp.value, Number(evInp.value), Number(oldalszamInp.value)
+    ))
+}
 
 
 
 
 
-
-
-function loadTable() {
+function loadTableCompact() {
     target.innerHTML = ""
-    for (let i = 0; i < konyvek.length; i++) {
-
-        const template = document.getElementById("table-template")
+    for (let index = 0; index < konyvek.length; index++) {
         const row = template.content.cloneNode(true)
         const fields = row.getElementById("template-tr").getElementsByClassName("table-fields")
-        fields[0].textContent = konyvek[i].cim
-        fields[1].textContent = konyvek[i].szerzo
-        fields[2].textContent = konyvek[i].kiadasiev
-        fields[3].textContent = konyvek[i].oldalszam
-        fields[4].textContent = konyvek[i].kolcsonozve ? "Kölcsönozve" : "Nincs kölcsönozve"
 
-        const button = document.createElement("button")
-        button.textContent = konyvek[i].kolcsonozve ? "Visszavitel" : "Kölcsönzés"
-        button.addEventListener("click", () => {
-            if (konyvek[i].kolcsonozve) {
-                konyvek[i].visszahoz()
+        if (szabadkonyvek) {
+            if (!konyvek[index].kolcsonozve) {
+                comapcLoad(konyvek[index], fields)
             }
-            else {
-                konyvek[i].kolcsonoz()
-
+            else{
+                continue;
             }
-            console.log(konyvek[i].kolcsonozve, konyvek[i].kolcsonoz)
-            loadTable();
-        })
+        }
+        else {
+            comapcLoad(konyvek[index], fields)
+        }
 
-        fields[5].appendChild(button)
         target.appendChild(row)
-
-
-
     }
 
 }
+
+function comapcLoad(konyv, fields) {
+    fields[0].textContent = konyv.cim
+    fields[1].textContent = konyv.szerzo
+    fields[2].textContent = konyv.kiadasiev
+    fields[3].textContent = konyv.oldalszam
+    fields[4].textContent = konyv.kolcsonozve ? "Kölcsönozve" : "Nincs kölcsönozve"
+
+    const button = document.createElement("button")
+    button.textContent = konyv.kolcsonozve ? "Visszavitel" : "Kölcsönzés"
+    button.addEventListener("click", () => {
+        if (konyv.kolcsonozve) {
+            konyv.visszahoz()
+        }
+        else {
+            konyv.kolcsonoz()
+
+        }
+        console.log(konyv.kolcsonozve, konyv.kolcsonoz)
+        loadTableCompact()
+    })
+
+    fields[5].appendChild(button)
+    return fields
+}
+
+
 
 
 
