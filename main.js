@@ -32,9 +32,9 @@ function Konyv(cim, szerzo, kiadasiev, oldalszam) {
 }
 
 konyvek.push(
-    new Konyv("The Times Desire", "Hyden Cloud", 1871, 200),
-    new Konyv("Twinkle Star", "Matthew Rain", 1919, 70),
-    new Konyv("Ways of the Devil", "Trixie Wee", 1939, 250),
+    new Konyv("Spider", "Hyden Cloud", 1871, 200),
+    new Konyv("Bugs", "Matthew Rain", 1919, 70),
+    new Konyv("Bamboo", "Trixie Wee", 1939, 250),
     new Konyv("Spouces", "Spark", 1941, 400)
 )
 
@@ -75,7 +75,7 @@ function registerBook() {
 function getStatistics() {
     let jelenKiadasiEv = 0;
     let jelenOldalszam = 0;
-    let osszOldalszam
+    let osszOldalszam = 0;
     konyvek.forEach(item => {
         if (item.oldalszam > jelenOldalszam) {
             jelenOldalszam = item.oldalszam
@@ -85,14 +85,14 @@ function getStatistics() {
         }
         osszOldalszam += item.oldalszam
     });
-    let oldalatlag = osszOldalszam / konyvek.length
-    return { jelenKiadasiEv, jelenOldalszam, oldalatlag }
+    let oldalatlag = Math.round( osszOldalszam / konyvek.length)
+    return { jelenKiadasiEv, jelenOldalszam,  oldalatlag}
 }
 
 
 function writeStatistics(stats) {
     regiKonyv.innerHTML = `A legrégebbi könyv ${stats.jelenKiadasiEv}\n`
-    legvasKönyv.innerHTML = `A legvastagabb könyve ${stats.jelenOldalszam}\n`
+    legvasKönyv.innerHTML = `A legvastagabb könyv ${stats.jelenOldalszam}\n`
     oldalAtlag.innerHTML = `Az osszes oldal átlaga ${stats.oldalatlag}\n`
 
 }
@@ -107,14 +107,14 @@ function loadTableCompact() {
 
         if (szabadkonyvek) {
             if (!konyvek[index].kolcsonozve) {
-                comapcLoad(konyvek[index], fields)
+                comapcLoad(konyvek[index], fields, index)
             }
             else {
                 continue;
             }
         }
         else {
-            comapcLoad(konyvek[index], fields)
+            comapcLoad(konyvek[index], fields, index)
         }
 
         target.appendChild(row)
@@ -122,7 +122,7 @@ function loadTableCompact() {
 
 }
 
-function comapcLoad(konyv, fields) {
+function comapcLoad(konyv, fields, index) {
     fields[0].textContent = konyv.cim
     fields[1].textContent = konyv.szerzo
     fields[2].textContent = konyv.kiadasiev
@@ -142,8 +142,17 @@ function comapcLoad(konyv, fields) {
         console.log(konyv.kolcsonozve, konyv.kolcsonoz)
         loadTableCompact()
     })
+    const torles = document.createElement("button")
+    torles.textContent = "Törlés"
+    torles.addEventListener("click", () => {
+        konyvek.splice(index,1)
+        loadTableCompact()
+        writeStatistics(getStatistics())
+    })
+
 
     fields[5].appendChild(button)
+    fields[6].appendChild(torles)
     return fields
 }
 
