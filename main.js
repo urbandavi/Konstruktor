@@ -32,10 +32,10 @@ function Konyv(cim, szerzo, kiadasiev, oldalszam) {
 }
 
 konyvek.push(
-    new Konyv("Spider", "Hyden Cloud", 1871, 200),
-    new Konyv("Bugs", "Matthew Rain", 1919, 70),
-    new Konyv("Bamboo", "Trixie Wee", 1939, 250),
-    new Konyv("Spouces", "Spark", 1941, 400)
+    new Konyv("Spider", "Shovel", 1871, 200),
+    new Konyv("Bugs", "Shovel", 1919, 70),
+    new Konyv("Bamboo", "Shovel", 1939, 250),
+    new Konyv("Spouces", "Shovel", 1941, 400)
 )
 
 
