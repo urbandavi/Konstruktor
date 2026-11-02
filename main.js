@@ -64,10 +64,22 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 function registerBook() {
-    konyvek.push(new Konyv(
-        cimInp.value, szerzoInp.value, Number(evInp.value), Number(oldalszamInp.value)
-    ))
-    writeStatistics(getStatistics())
+    try {
+        if(cimInp.value === "" || szerzoInp.value === "" ||evInp.value === ""|| oldalszamInp.value === ""){
+            throw new Error("Hiányzik az egyik elvárt adat!")
+        }
+        konyvek.push(new Konyv(
+            cimInp.value, szerzoInp.value, Number(evInp.value), Number(oldalszamInp.value)
+        ))
+        writeStatistics(getStatistics())
+        cimInp.value = ""
+        szerzoInp.value = ""
+        evInp.value = ""
+        oldalszamInp.value = ""
+
+    } catch (error) {
+        alert(error)
+    }
 
 }
 
