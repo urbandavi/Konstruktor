@@ -53,8 +53,8 @@ szbdKonyvek.addEventListener(
     }
 )
 
-document.addEventListener("DOMContentLoaded", ()=>{
-    
+document.addEventListener("DOMContentLoaded", () => {
+
     loadTableCompact()
     writeStatistics(getStatistics())
 }
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 function registerBook() {
     try {
-        if(cimInp.value === "" || szerzoInp.value === "" ||evInp.value === ""|| oldalszamInp.value === ""){
+        if (cimInp.value === "" || szerzoInp.value === "" || evInp.value === "" || oldalszamInp.value === "") {
             throw new Error("Hiányzik az egyik elvárt adat!")
         }
         konyvek.push(new Konyv(
@@ -85,25 +85,27 @@ function registerBook() {
 
 
 function getStatistics() {
-    let jelenKiadasiEv = 0;
     let jelenOldalszam = 0;
     let osszOldalszam = 0;
+    let konyvStatisztika = konyvek
+
     konyvek.forEach(item => {
         if (item.oldalszam > jelenOldalszam) {
             jelenOldalszam = item.oldalszam
         }
-        if (item.kiadasiev > jelenKiadasiEv) {
-            jelenKiadasiEv = item.kiadasiev
-        }
         osszOldalszam += item.oldalszam
     });
-    let oldalatlag = Math.round( osszOldalszam / konyvek.length)
-    return { jelenKiadasiEv, jelenOldalszam,  oldalatlag}
+    konyvStatisztika.sort((a, b) => a.kiadasiev - b.kiadasiev);
+
+    let oldalatlag = Math.round(osszOldalszam / konyvek.length)
+    let legKorabbi = konyvStatisztika[0].kiadasiev;
+
+    return { legKorabbi, jelenOldalszam, oldalatlag }
 }
 
 
 function writeStatistics(stats) {
-    regiKonyv.innerHTML = `A legrégebbi könyv ${stats.jelenKiadasiEv}\n`
+    regiKonyv.innerHTML = `A legrégebbi könyv ${stats.legKorabbi}\n`
     legvasKönyv.innerHTML = `A legvastagabb könyv ${stats.jelenOldalszam}\n`
     oldalAtlag.innerHTML = `Az osszes oldal átlaga ${stats.oldalatlag}\n`
 
@@ -157,7 +159,7 @@ function comapcLoad(konyv, fields, index) {
     const torles = document.createElement("button")
     torles.textContent = "Törlés"
     torles.addEventListener("click", () => {
-        konyvek.splice(index,1)
+        konyvek.splice(index, 1)
         loadTableCompact()
         writeStatistics(getStatistics())
     })
@@ -167,14 +169,3 @@ function comapcLoad(konyv, fields, index) {
     fields[6].appendChild(torles)
     return fields
 }
-
-
-
-
-
-
-
-
-
-
-
